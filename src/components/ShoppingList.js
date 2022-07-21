@@ -2,10 +2,17 @@ import React, { useState } from "react";
 import ItemForm from "./ItemForm";
 import Filter from "./Filter";
 import Item from "./Item";
+import itemData from "../data/items";
 
-function ShoppingList({ items }) {
+function ShoppingList() {
+  const [items, setItems] = useState(itemData);
+
   const [selectedCategory, setSelectedCategory] = useState("All");
 
+  const onItemFormSubmit = (newItem) => {
+    setItems([...items,newItem]);
+  }
+  
   function handleCategoryChange(event) {
     setSelectedCategory(event.target.value);
   }
@@ -18,7 +25,7 @@ function ShoppingList({ items }) {
 
   return (
     <div className="ShoppingList">
-      <ItemForm />
+      <ItemForm onItemFormSubmit={onItemFormSubmit}/>
       <Filter onCategoryChange={handleCategoryChange} />
       <ul className="Items">
         {itemsToDisplay.map((item) => (
