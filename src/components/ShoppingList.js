@@ -5,9 +5,9 @@ import Item from "./Item";
 import itemData from "../data/items";
 
 function ShoppingList() {
-  const [items, setItems] = useState(itemData);
-
+  const [items, setItems] = useState(itemData); //for adding new items
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [userCategory, setUserCategory] = useState("All")
 
   const onItemFormSubmit = (newItem) => {
     setItems([...items,newItem]);
@@ -17,16 +17,27 @@ function ShoppingList() {
     setSelectedCategory(event.target.value);
   }
 
-  const itemsToDisplay = items.filter((item) => {
-    if (selectedCategory === "All") return true;
+  function handleSearchChange(event) {
+    setUserCategory(event.target.value);
+  }
 
-    return item.category === selectedCategory;
+  const itemsToDisplay = items.filter((item) => {
+    if(userCategory === "All" || userCategory === "") {
+      if(selectedCategory === "All") {
+        return true;
+      }
+      else {
+        return item.category === selectedCategory
+      }
+    } else {
+      return item.name.toLowerCase().includes(userCategory)
+    }
   });
 
   return (
     <div className="ShoppingList">
-      <ItemForm onItemFormSubmit={onItemFormSubmit}/>
-      <Filter onCategoryChange={handleCategoryChange} />
+      <ItemForm onFormSubmit={onItemFormSubmit}/>
+      <Filter onCategoryChange={handleCategoryChange} onSearchChange={handleSearchChange}/>
       <ul className="Items">
         {itemsToDisplay.map((item) => (
           <Item key={item.id} name={item.name} category={item.category} />
